@@ -105,15 +105,42 @@ with st.sidebar:
                     else:
                         st.warning(f"Image file {display_filename} not found.")
 
-# Link to AllTrails website and display the AllTrails logo image
+#Feature 3 ALL TRAILS WEBSITE
+# Create a container for the AllTrails section
 st.markdown("## For More Creekside Trail Recommendations")
-st.write("For more detailed trail information, visit the AllTrails website:")
-st.markdown("[Explore Creekside Trails on AllTrails](https://www.alltrails.com/?ref=header)", unsafe_allow_html=True)
 
-# Display AllTrails logo image
-image_path = "alltrail.png"
-if os.path.exists(image_path):
-    st.image(image_path, caption="AllTrails - Discover More Trails", use_column_width=True)
-else:
-    st.warning("The 'alltrail.png' image was not found in the directory.")
+# Create columns for better layout
+col1, col2, col3 = st.columns([1, 2, 1])
+
+with col2:
+    # Display AllTrails logo image
+    image_path = "alltrail.png"
+    if os.path.exists(image_path):
+        st.image(image_path, caption="AllTrails - Discover More Trails", use_column_width=True)
+    else:
+        st.warning("The 'alltrail.png' image was not found in the directory.")
+    
+    # Create a styled button that links to AllTrails
+    st.markdown(
+        """
+        <div style='text-align: center'>
+            <a href='https://www.alltrails.com/?ref=header' target='_blank'>
+                <button style='
+                    background-color: #2E7D32;
+                    color: white;
+                    padding: 10px 24px;
+                    border: none;
+                    border-radius: 4px;
+                    cursor: pointer;
+                    font-size: 16px;
+                    margin: 10px 0;
+                    width: 100%;
+                '>
+                    Explore Creekside Trails on AllTrails
+                </button>
+            </a>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
 
