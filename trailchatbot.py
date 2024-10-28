@@ -4,7 +4,7 @@ from openai import OpenAI
 import streamlit as st
 
 # Initialize OpenAI client
-#"Remove this comment to enable" client =  OpenAI(api_key='')
+client = OpenAI(api_key='')
 
 # Text generation feature and role for system
 def get_completion(prompt, model="gpt-3.5-turbo"):
@@ -57,6 +57,21 @@ def get_image(prompt, model="dall-e-2"):
         st.error(f"Error generating image: {e}")
         return None
 
+# Function for hiking information
+def get_hiking_info(category, model="gpt-3.5-turbo"):
+    try:
+        completion = client.chat.completions.create(
+            model=model,
+            messages=[
+                {"role": "system", "content": "You are an expert on hiking safety and trail information. Provide detailed, practical advice about hiking concerns and safety measures."},
+                {"role": "user", "content": f"Provide comprehensive information about {category} on hiking trails, including potential risks and safety tips."}
+            ]
+        )
+        return completion.choices[0].message.content
+    except Exception as e:
+        st.error(f"Error generating information: {e}")
+        return None
+
 # Streamlit App
 st.title("Creekside Trail Explorer")
 st.write("Get personalized creekside trail recommendations based on your preferences and location. Optionally, view generated images for a visual impression of the trails.")
@@ -66,7 +81,7 @@ with st.sidebar:
     st.header("Trail Explorer Chat")
     messages = st.container()
 
-# Sidebar history storafge
+    # Sidebar history storage
     if "chat_history" not in st.session_state:
         st.session_state.chat_history = []
     
@@ -105,8 +120,43 @@ with st.sidebar:
                     else:
                         st.warning(f"Image file {display_filename} not found.")
 
-#Feature 3 ALL TRAILS WEBSITE
-# Create a container for the AllTrails section
+# Trail Information Guide Section
+st.subheader("Trail Information Guide")
+st.write("Select a topic to learn more about common hiking concerns and safety measures.")
+
+# Create dropdown menu with expanded categories
+category = st.selectbox(
+    "What would you like to know about?",
+    options=[
+        "Wildlife Encounters & Safety",
+        "Plant Hazards & Identification",
+        "Weather Safety & Preparation",
+        "Navigation & Trail Markers",
+        "First Aid & Emergency Response",
+        "Gear & Equipment Essentials",
+        "Water Safety & Hydration",
+        "Trail Etiquette & Rules",
+        "Seasonal Hiking Tips",
+        "Physical Preparation & Fitness"
+    ]
+)
+
+# Generate and display information when category is selected
+if category:
+    st.write(f"### {category}")
+    
+    # Add a loading spinner while generating content
+    with st.spinner(f"Generating information about {category}..."):
+        response = get_hiking_info(category)
+        
+        if response:
+            # Display the generated information in a nice format
+            st.markdown(response)
+            
+            # Add a helpful tip box
+            st.info("💡 **Pro Tip**: Save this information for offline reference when hiking!")
+
+# AllTrails Section
 st.markdown("## For More Creekside Trail Recommendations")
 
 # Create columns for better layout
@@ -143,4 +193,3 @@ with col2:
         """,
         unsafe_allow_html=True
     )
-
