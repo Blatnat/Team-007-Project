@@ -138,7 +138,7 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-
+#Dandy Bien (Wildlife Visualizer)
 # Creek Trail Species Data
 CREEK_TRAIL_SPECIES = {
     "Plant": {
